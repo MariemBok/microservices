@@ -17,21 +17,18 @@ spring:
           predicates:
             - Path=/api/candidat/**
           filters:
-            - TokenRelay=
             - RemoveRequestHeader=Cookie
         - id: microservice-review
           uri: lb://microservice-review
           predicates:
             - Path=/api/review/**
           filters:
-            - TokenRelay=
             - RemoveRequestHeader=Cookie
         - id: microservice-auth
           uri: lb://microservice-auth
           predicates:
             - Path=/api/auth/**
           filters:
-            - TokenRelay=
             - RemoveRequestHeader=Cookie
 eureka:
   client:

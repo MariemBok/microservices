@@ -1,23 +1,13 @@
-# Use an official Maven image as a build stage
-FROM maven:3.8.4-openjdk-11-slim AS build
-WORKDIR /app
-
-# Copy the Maven project file
+FROM openjdk:8-jdk-alpine as mvn-build
+WORKDIR /app/build
+COPY ./src ./src
 COPY pom.xml .
+COPY .mvn .mvn
+COPY mvnw .
+RUN chmod +x ./mvnw
+RUN ./mvnw clean install -Dmaven.test.skip=true
 
-# Download dependencies and build application
-RUN mvn clean install -DskipTests
-
-# Copy the application files
-COPY src ./src
-
-# Create the final image with the built JAR
-FROM openjdk:11-jre-slim
+FROM openjdk:8-jdk-alpine
 WORKDIR /app
-COPY --from=build /app/target/your-spring-boot-app.jar .
-
-# Expose the port that the application will run on
-EXPOSE 9082
-
-# Specify the command to run on container startup
-CMD ["java", "-jar", "your-spring-boot-app.jar"]
+COPY --from=mvn-build /app/build/target/*.jar ./spring-app.jar
+CMD ["java", "-jar", "/app/spring-app.jar"]
