@@ -36,4 +36,4 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-// eurekaHelper.registerWithEureka("microservice-auth", port);
+eurekaHelper.registerWithEureka("microservice-auth", port);
